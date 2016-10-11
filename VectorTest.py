@@ -5,9 +5,9 @@ import Vector as vec
 import numpy as np
 
 """
-Open file with two complex variables,
+Open file with two vectors,
 read them in line-by-line and assign
-them to variables x1 and x2.
+them to vectors v1,v2 and v3.
 """
 inFile = open("vectors.in","r")
 line = inFile.readline()
@@ -16,9 +16,13 @@ v1 = np.array([float(tokens[0]), float(tokens[1]), float(tokens[2])])
 line = inFile.readline()
 tokens = line.split()
 v2 = np.array([float(tokens[0]), float(tokens[1]), float(tokens[2])])
+line = inFile.readline()
+tokens = line.split()
+v3 = np.array([float(tokens[0]), float(tokens[1]), float(tokens[2])])
 # Print out both numbers
-print "x1 = " + str(x1)
-print "x2 = " + str(x2)
+print "v1 = " + v1
+print "v2 = " + v2
+print "v3 = " + v3
 print ""
 
 # Test complex number methods:
