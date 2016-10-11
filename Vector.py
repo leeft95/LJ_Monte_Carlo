@@ -15,22 +15,22 @@ def scalar(a, scalar):
     return a*scalar
 
 #The vector difference between two vectors
-def sub(a, b):
+def sub(a, b,c):
     c = a-b
     return c
 
 #The vector sum between two vectors
-def add(a, b):
+def add(a, b,c):
     c=a-b
     return c
 
 
 #Cross product of two vectors
-def cross(a,b):
+def cross(a,b,c):
     c= np.cross(a,b)
     return c
 
 #Dot product of two vectors
-def dot(a,b):
+def dot(a,b,c):
     c=np.inner(a,b)
     return c
