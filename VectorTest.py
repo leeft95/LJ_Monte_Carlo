@@ -1,4 +1,7 @@
-import Complex as cplx
+"""
+CMod Ex2: tester of Complex number operations
+"""
+
 import numpy as np
 
 """
@@ -6,14 +9,13 @@ Open file with two complex variables,
 read them in line-by-line and assign
 them to variables x1 and x2.
 """
-inFile = open("complex.in","r")
+inFile = open("vectors.in","r")
 line = inFile.readline()
 tokens = line.split()
-x1 = np.array([float(tokens[0]), float(tokens[1])])
+v1 = np.array([float(tokens[0]), float(tokens[1]), float(tokens[2])])
 line = inFile.readline()
 tokens = line.split()
-x2 = np.array([float(tokens[0]), float(tokens[1])])
-
+v2 = np.array([float(tokens[0]), float(tokens[1]), float(tokens[2])])
 # Print out both numbers
 print "x1 = " + str(x1)
 print "x2 = " + str(x2)
