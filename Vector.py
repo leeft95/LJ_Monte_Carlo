@@ -27,8 +27,9 @@ def add(a, b,c):
 
 
 #Cross product of three vectors
-def cross(a,b,c):
-    d = scalar(b,dot(a,c)) - scalar(c,dot(a,b))
+def cross(a,b,c)
+    d = np.array[(a[2]*b[3] - a[3]*b[2]),(a[3]*b[1] - a[1]*b[3]),(a[1]*b[2] - a[2]*b[1])]
+    d = cross(d,c)
     return d
 
 #Dot product of three vectors
