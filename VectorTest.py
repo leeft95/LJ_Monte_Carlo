@@ -1,7 +1,7 @@
 """
 CMod Ex2: tester of Complex number operations
 """
-
+import Vector as vec
 import numpy as np
 
 """
