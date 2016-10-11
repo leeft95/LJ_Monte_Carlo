@@ -19,7 +19,7 @@ v2 = np.array([float(tokens[0]), float(tokens[1]), float(tokens[2])])
 line = inFile.readline()
 tokens = line.split()
 v3 = np.array([float(tokens[0]), float(tokens[1]), float(tokens[2])])
-# Print out both numbers
+# Print out all 3 numbers
 print "v1 = " + v1
 print "v2 = " + v2
 print "v3 = " + v3
