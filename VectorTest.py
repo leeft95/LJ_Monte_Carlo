@@ -1,7 +1,3 @@
-"""
-CMod Ex2: tester of Complex number operations
-"""
-
 import Complex as cplx
 import numpy as np
 
