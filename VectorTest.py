@@ -1,5 +1,5 @@
 """
-CMod Ex2: tester of Complex number operations
+CMod Ex2: Testing of Vector methods 
 """
 import Vector as vec
 import numpy as np
@@ -9,7 +9,7 @@ Open file with two vectors,
 read them in line-by-line and assign
 them to vectors v1,v2 and v3.
 """
-inFile = open("vectors.in","r")
+inFile = open("vector.in","r")
 line = inFile.readline()
 tokens = line.split()
 v1 = np.array([float(tokens[0]), float(tokens[1]), float(tokens[2])])
@@ -20,29 +20,18 @@ line = inFile.readline()
 tokens = line.split()
 v3 = np.array([float(tokens[0]), float(tokens[1]), float(tokens[2])])
 # Print out all 3 numbers
-print "v1 = " + v1
-print "v2 = " + v2
-print "v3 = " + v3
+print "v1 = " + str(v1)
+print "v2 = " + str(v2)
+print "v3 = " + str(v3)
 print ""
 
-# Test complex number methods:
-# conjugation, modulus (squared), scaling
-print "conj(x2) = " + str(cplx.conj(x2))
-print "|x2|^2 = " + str(cplx.normSq(x2))
-print "|x2|   = " + str(cplx.norm(x2))
-print "3*x2   = " + str(cplx.scale(x2, 3.0))
+# Test vector methods:
+# magnitude, suming , dot product, cross product 
+print "magnitude of:\n v1 = " + str(vec.mag(v1))
+print "Vector sum of: \n v1, v2 and v3 = " + str(vec.add(vec.add(v1,v2),v3))
+print "dot product of:\n v1.v2 = " + str(vec.dot(v1,v2))
+print "cross product of: \n v1 x v2 =" + str(vec.cross(v1,v2))
 
-# Test arithmetic operations
+# Test vector operations:
 
-# addition
-z2 = cplx.add(x1,x2)
-print "z2 = x1+x2 = " + str(z2)
-# subtraction
-z3 = cplx.sub(x1, x2)
-print "z3 = x1-x2 = " + str(z3)
-# complex multiplication
-z4 = cplx.mul(x1, x2)
-print "z4 = x1*x2 = " + str(z4)
-# complex division
-z5 = cplx.div(x2, x1)
-print "z5 = x2/x1 = " + str(z5)
+
