@@ -1,6 +1,6 @@
-#packages math and numpy will allow us to perform the matrix calculations below
+#The vector programe that defines vector operation methods.
 import math
-import numpy as np #import as np, shortened for easier use in this script
+import numpy as np 
 
 #square magnitude
 def sqmag(a):
@@ -38,14 +38,14 @@ def sub(a, b):
     subtract one vector from another 
     :param a: 3 dimensional numpy array a
     :param b: 3 dimensional numpy array b
-    :return: vector diffreence between a and b 
+    :return: difference of vector b from a (a-b)
     """ 
     d = a-b
     return d
 
 #The vector sum between two vectors
 def add(a,b):
-    """" 
+    """ 
     Vector sum
     :param a: 3 dimensional numpy array a
     :param b: 3 dimensional numpy array b
@@ -55,15 +55,20 @@ def add(a,b):
     return d
 
 #Cross product of three vectors
-def cross(a,b)
-    """
-    return the cross product of two vectors
-    :param a: 3 dimensional numpy array a
-    :param b: 3 dimensional numpy array b
-    :return: cross product axb
-    """ 
-    d = np.array[(a[2]*b[3] - a[3]*b[2]),(a[3]*b[1] - a[1]*b[3]),(a[1]*b[2] - a[2]*b[1])]
-    return d
+def cross(a,b):
+	"""
+    	return the cross product of two vectors
+    	:param a: 3 dimensional numpy array a
+    	:param b: 3 dimensional numpy array b
+    	:return: cross product axb
+    	""" 
+	x1 = (a[1]*b[2] - a[2]*b[1])
+	x2 = (a[2]*b[0] - a[0]*b[2])
+	x3 = (a[0]*b[1] - a[1]*b[0])
+	d = np.array([x1,x2,x3],float)
+	return d
+    	
+	
 
 #Dot product of two vectors
 def dot(a,b):
@@ -74,5 +79,5 @@ def dot(a,b):
     :return: the sum of corresponding elements of a and b
     (a[1]*b[1] + a[2]*b[2] + a[3]*b[3]) labelled d
     """
-    d = a[1]*b[1] + a[2]*b[2] + a[3]*b[3]
+    d = a[0]*b[0] + a[1]*b[1] + a[2]*b[2]
     return d
