@@ -1,8 +1,9 @@
 """
 CMod Ex2: Testing of Vector methods 
 """
-import Vector as vec
-import numpy as np
+import Vector as vec #import as vec, shortened for easier use in this script
+
+import numpy as np #import as np, shortened for easier use in this script
 
 """
 Open file with two vectors,
