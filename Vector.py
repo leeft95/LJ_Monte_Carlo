@@ -4,9 +4,11 @@ import numpy as np #import as np, shortened for easier use in this script
 
 #square magnitude
 def sqmag(a):
-""" Return the square magnitude of a vector
+    """ 
+    Return the square magnitude of a vector
     :param a:  3 dimensional numpy array a
-    :return: vector a dotted with itself, equivalent to the square of the magnitude of a"""
+    :return: vector a dotted with itself, equivalent to the square of the magnitude of a
+    """
     return a*a
 
 # Magnitude of a vector
