@@ -1,18 +1,27 @@
-#
+#packages math and numpy will allow us to perform the matrix calculations below
 import math
-import numpy as np
+import numpy as np  
+"""import as shortened version, makes functions easier to type out"""
 
 #square magnitude
 def sqmag(a):
+""" Return the square magnitude of a vector
+    param a:  vector a
+    return: vector a dotted with itself, equivalent to the square of the magnitude of a"""
     return a*a
 
 # Magnitude of a vector
 def mag(a):
+
     b = sqmag(a)
     return (b[0] + b[1] + b[2])**0.5
 
 # Scalar Multiple of a vector
 def scalar(a, scalar):
+"""Multiplying a vector by a scalar
+    param a: 3D vector a
+    param scalar: any real integer or fraction that will be inputted by the user
+    return the product scalar*a  """
     return a*scalar
 
 #The vector difference between two vectors
@@ -22,6 +31,10 @@ def sub(a, b):
 
 #The vector sum between two vectors
 def add(a,b):
+"""" Vector sum
+    param a: first 3D vector a
+    param b: second 3D vector b
+    return the sum a+b labelled d"""
     d = a+b
     return d
 
@@ -32,5 +45,10 @@ def cross(a,b)
 
 #Dot product of two vectors
 def dot(a,b):
+"""Scalar product
+    param a: first 3D vector a
+    param b: second 3D vector b 
+    return the sum of corresponding elements of a and b
+    (a[1]*b[1] + a[2]*b[2] + a[3]*b[3]) labelled d """
     d = a[1]*b[1] + a[2]*b[2] + a[3]*b[3]
     return d
