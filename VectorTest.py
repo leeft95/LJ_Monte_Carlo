@@ -33,6 +33,11 @@ print "dot product of:\n v1.v2 = " + str(vec.dot(v1,v2))
 print "cross product of: \n v1 x v2 =" + str(vec.cross(v1,v2))
 
 # Test vector operations:
+"""The numpy vector operations are printed to the terminal using strings
+  There are three "Show that..." statements below, which are demonstrated 
+  step by step and then printed to the terminal"""
+
+#first "show that..." statement
 print " \nShow that the cross product of v1 x v2 = -v2 x v1"
 
 v4 = vec.scalar(v2,-1)
@@ -40,14 +45,18 @@ print "-v2 = " + str(v4)
 print "-v2 x v1 = " + str(vec.cross(v4,v1))
 print " v1 x v2 = " + str(vec.cross(v1,v2))
 
+#second "show that..." statement
 print "\nShow v1 x (v2 + v3) = (v1 x v2) +(v1 x v3)"
+
 print "v1 x (v2 + v3) = " + str(vec.cross(v1,vec.add(v2,v3)))
 print "(v1 x v2) = " + str(vec.cross(v1,v2))
 print "(v1 x v3) = " + str(vec.cross(v1,v3))
 v4 = vec.cross(v1,v2) + vec.cross(v1,v3)
 print "(v1 x v2) +(v1 x v3) = " + str(v4)
 
+#Third "show that..." statement
 print "\nShow v1 x (v2 x v3) = (v1.v3)v2 - (v1.v2)v3"
+
 print "v1 x (v2 x v3) = " + str(vec.cross(v1,vec.cross(v2,v3)))
 print "(v1.v3)v2 = " + str(vec.scalar(v2,vec.dot(v1,v3)))
 print "(v1.v2)v3 = " + str(vec.scalar(v3,vec.dot(v1,v2)))
