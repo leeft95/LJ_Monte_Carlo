@@ -20,7 +20,7 @@ v2 = np.array([float(tokens[0]), float(tokens[1]), float(tokens[2])])
 line = inFile.readline()
 tokens = line.split()
 v3 = np.array([float(tokens[0]), float(tokens[1]), float(tokens[2])])
-# Print out all 3 numbers for every 3 do
+# Print out all 3 elements of all 3 numpy arrays
 print "v1 = " + str(v1)
 print "v2 = " + str(v2)
 print "v3 = " + str(v3)
@@ -29,15 +29,10 @@ print ""
 # Test vector methods:
 # magnitude, summing , dot product, cross product 
 
-#print the magnitude of numpy array v1 to console
 print "magnitude of:\n v1 = " + str(vec.mag(v1))
-#print vector sum of numpy arrays v1, v2 and v3 to console 
 print "Vector sum of: \n v1, v2 and v3 = " + str(vec.add(vec.add(v1,v2),v3))
-#print dot product of numpy arrays v1, v2 and v3 to console 
 print "dot product of:\n v1.v2 = " + str(vec.dot(v1,v2))
-#print cross product of numpy arrays v1, v2 and v3 to console 
 print "cross product of: \n v1 x v2 =" + str(vec.cross(v1,v2))
-
 
 # Test vector operations:
 """The numpy vector operations are printed to the terminal using strings
