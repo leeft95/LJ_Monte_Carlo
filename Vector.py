@@ -38,7 +38,7 @@ def sub(a, b):
     subtract one vector from another 
     :param a: 3 dimensional numpy array a
     :param b: 3 dimensional numpy array b
-    :return: difference of vector b from a (a-b)
+    :return: difference of vector b from a (subract b from a)
     """ 
     d = a-b
     return d
