@@ -17,7 +17,7 @@ class Particle3D(object):
    
     @staticmethod
     def vec_sep(p1,p2):
-	return np.linalg.norm(p1-p2)
+	return p1 - p2
 
     # Initialise a Particle3D instance
     def __init__(self,pos, vel, mass,name):
@@ -43,7 +43,8 @@ class Particle3D(object):
     # First-order velocity update
     def leapVelocity(self, dt, force):
 	self.velocity = self.velocity + dt*force/self.mass
-	
+	return self.velocity
+
     # First-order position update
     def leapPos1st(self, dt):
         self.position = self.position + dt*self.velocity
@@ -51,3 +52,4 @@ class Particle3D(object):
     # Second-order position update
     def leapPos2nd(self, dt, force):
         self.position = self.position + dt*self.velocity + 0.5*dt**2*force/self.mass
+	return self.position
