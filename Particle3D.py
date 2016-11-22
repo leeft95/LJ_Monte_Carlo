@@ -9,20 +9,18 @@ class Particle3D(object):
     def from_file(infile):
 	line = infile.readline()
 	tokens = line.split(",")
-	name = [str(tokens[0])]
-	x_pos = [float(tokens[1])]
-	y_pos = [float(tokens[2])]
-	z_pos = [float(tokens[3])]
-	x_vel = [float(tokens[4])]
-	y_vel = [float(tokens[5])]
-	z_vel = [float(tokens[6])]
-	mass = [float(tokens[7])]
-	return Particle3D(x_pos,x_vel,y_pos,y_vel,z_pos,z_vel,mass,name)
+	name = str(tokens[0])
+	pos = np.array([float(tokens[1]),float(tokens[2]),float(tokens[3])])
+	
+	vel = np.array([float(tokens[4]),float(tokens[5]),float(tokens[6])])
+	
+	mass = float(tokens[7])
+	return Particle3D(pos,vel,mass,name)
 
     # Initialise a Particle3D instance
-    def __init__(self, x_pos, x_vel, y_pos, y_vel, z_pos, z_vel, mass,name):
-        self.position = np.array([x_pos,y_pos,z_pos],float)
-	self.velocity = np.array([x_vel,y_vel,z_vel],float)
+    def __init__(self,pos, vel, mass,name):
+        self.position = pos
+	self.velocity = vel
 	self.mass = mass
 	self.name = name
 
@@ -33,12 +31,14 @@ class Particle3D(object):
     # Kinetic energy, which is the each components KE summed up
     def kineticEnergy(self):
 	e = 0.0
-	step = 2
-	for i in range (step):
+	for i in range(0,3):
 		b = float(self.velocity[i])
+		print i
+		print b
 		e = 0.5*self.mass*(b**2)
 		print e
 		e += e
+		
 	return e
 
     # Time integration methods
