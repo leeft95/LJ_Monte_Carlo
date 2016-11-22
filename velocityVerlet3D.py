@@ -38,6 +38,7 @@ print Particle3D.vec_sep(p1.position,p2.position)
 numstep = 1000
 time = 0.0
 dt = 0.01
+pe = 0.0
 
 # Set up force constants
 fc2 = p1.mass
@@ -49,7 +50,7 @@ print force
 tValue = [time]
 posValue_x = [p1.position[0]]
 posValue_y = [p1.position[1]]
-outfile.write("{0:f} {1:f} {2:f}\n".format(time, p1.position[0], p1.position[1]))
+outfile.write("{0:f} {1:f} {2:f} {3:f}\n".format(time, p1.position[0], p1.position[1],pe))
 
 # Start the time integration loop
 
@@ -64,7 +65,8 @@ for i in range(numstep):
 
     # Reset force variable
     force = copy(force_new)
-
+    #update particle potential energy
+    pe = -(fc2*fc4)/(np.linalg.norm(p1.position-p2.position))
     # Increase time
     time = time + dt
     
@@ -73,7 +75,7 @@ for i in range(numstep):
     posValue_y.append(p1.position[1])
     posValue_x.append(p1.position[0])
 	
-    outfile.write("{0:f} {1:f} {2:f}\n".format(time, p1.position[0], p1.position[1]))
+    outfile.write("{0:f} {1:f} {2:f} {3:f}\n".format(time, p1.position[0], p1.position[1],pe))
 
 # Close output file
 outfile.close()
