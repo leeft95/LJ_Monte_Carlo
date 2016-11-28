@@ -1,9 +1,6 @@
 """
 CMod Ex3: velocity Verlet time integration of
-particle in anharmonic potential.
-
-Produce both a plot of the amplitude and an
-output file.
+particle 
 """
 
 import sys
@@ -13,8 +10,7 @@ from Particle3D import Particle3D
 from copy import copy
 
 
-
-# Read name of output file from command line
+# Read name of input and output file from command line
 if len(sys.argv)!=3:
     print "Wrong number of arguments."
     print "Usage: " + sys.argv[0] + "<input file>" + "<output file>"
@@ -23,7 +19,7 @@ else:
     filename = sys.argv[1]    
     outfileName = sys.argv[2]
 
-# Open output file for writing
+# Open output and input file for input and output
 outfile = open(outfileName, "w")
 infile = open(filename,"r")
 # Set up particle
@@ -80,7 +76,7 @@ for i in range(numstep):
 # Close output file
 outfile.close()
 
-# Plot graph of amplitude vs time
+# Plot graph of x and y position
 pyplot.plot(posValue_x,posValue_y)
 pyplot.show()
 
