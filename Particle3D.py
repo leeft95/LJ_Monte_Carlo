@@ -4,7 +4,10 @@
 import math
 import numpy as np
 class Particle3D(object):
-
+"""
+The two static methods are 1) To input data from an input file called particle.in where each value of the file corresponds to an
+attribute of the particle
+"""
     @staticmethod
     def from_file(infile):
 	line = infile.readline()
@@ -14,7 +17,9 @@ class Particle3D(object):
 	vel = np.array([float(tokens[4]),float(tokens[5]),float(tokens[6])],float)
 	mass = float(tokens[7])
 	return Particle3D(pos,vel,mass,name)
-   
+  """
+  This static method returns the vector seperation of two particles 
+  """
     @staticmethod
     def vec_sep(p1,p2):
 	return p1 - p2
