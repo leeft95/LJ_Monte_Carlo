@@ -30,6 +30,7 @@ numstep = 1000
 time = 0.0
 dt = 0.1
 pe = 0.0
+e = 0.0
 
 # Set up force constants
 fc2 = p1.mass
@@ -39,6 +40,7 @@ fc4 = p2.mass
 tValue = [time]
 posValue_x = [p1.position[0]]
 posValue_y = [p1.position[1]]
+outfile.write("Time" + "     X" + "        Y" + "        Total Energy" "\n")
 outfile.write("{0:f} {1:f} {2:f} {3:f}\n".format(time, p1.position[0], p1.position[1],pe))
 
 # Start the time integration loop
@@ -49,9 +51,10 @@ for i in range(numstep):
     # Update force
     force = -(fc2*fc4)/(np.linalg.norm(p1.position-p2.position)**3)*Particle3D.vec_sep(p1.position,p2.position)
     # Update particle velocity
-    p1.leapVelocity(dt, force)
+    v = p1.leapVelocity(dt, force)
     #update particle potential energy
     pe = -(fc2*fc4)/(np.linalg.norm(p1.position-p2.position))
+    e = pe + p1.kineticEnergy(v)
     # Increase time
     time = time + dt
     
@@ -59,7 +62,7 @@ for i in range(numstep):
     posValue_y.append(p1.position[1])
     posValue_x.append(p1.position[0])
 	
-    outfile.write("{0:f} {1:f} {2:f} {3:f}\n".format(time, p1.position[0], p1.position[1],pe))
+    outfile.write("{0:f} {1:f} {2:f} {3:f}\n".format(time, p1.position[0], p1.position[1],e))
 
 # Close output file
 outfile.close()

@@ -4,10 +4,10 @@
 import math
 import numpy as np
 class Particle3D(object):
-"""
-The two static methods are 1) To input data from an input file called particle.in where each value of the file corresponds to an
-attribute of the particle
-"""
+    """
+    The two static methods are 1) To input data from an input file called particle.in where each value of the file corresponds to an attribute of the particle
+    """
+
     @staticmethod
     def from_file(infile):
 	line = infile.readline()
@@ -17,9 +17,9 @@ attribute of the particle
 	vel = np.array([float(tokens[4]),float(tokens[5]),float(tokens[6])],float)
 	mass = float(tokens[7])
 	return Particle3D(pos,vel,mass,name)
-  """
-  This static method returns the vector seperation of two particles 
-  """
+    """
+This static method returns the vector seperation of two particles 
+    """
     @staticmethod
     def vec_sep(p1,p2):
 	return p1 - p2
@@ -36,10 +36,10 @@ attribute of the particle
         return " Name = " + str(self.name) + "\n postion = " + str(self.position) + "\n velocity = " + str(self.velocity) + "\n mass = " + str(self.mass)
     
     # Kinetic energy, which is the each components KE summed up
-    def kineticEnergy(self):
+    def kineticEnergy(self, velocity):
 	e = 0.0
 	for i in range(0,3):
-		b = float(self.velocity[i])
+		b = float(velocity[i])
 		c = 0.5*self.mass*b**2
 		e = e + c	
 	return e
