@@ -71,10 +71,10 @@ for i in range(numstep):
 	
     outfile.write("{0:f} {1:f} {2:f} {3}\n".format(time, p1.position[0], p1.position[1],pe))
 
-""" Close output file """
+""" Close output and input file """
 outfile.close()
 infile.close()
-""" Plot graph of x and y position """
+""" Plot graph of x and y position and a graph of energy """
 pyplot.figure()
 pyplot.subplot(111)
 pyplot.plot(posValue_x,posValue_y)
