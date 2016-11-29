@@ -5,7 +5,7 @@ import math
 import numpy as np
 class Particle3D(object):
     """
-    The two static methods are 1) To input data from an input file called particle.in where each value of the file corresponds to an attribute of the particle
+    This static method inputs data from an input file called particle.in where each value of the file corresponds to an attribute of the particle
     """
 
     @staticmethod
