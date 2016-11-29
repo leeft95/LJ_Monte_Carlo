@@ -63,7 +63,7 @@ for i in range(numstep):
 
 # Close output file
 outfile.close()
-
+infile.close()
 # Plot graph of x and y position
 pyplot.plot(posValue_x,posValue_y)
 pyplot.show()
