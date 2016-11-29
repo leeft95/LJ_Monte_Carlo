@@ -32,7 +32,7 @@ p2 = Particle3D.from_file(infile)
 # Set up simulation parameters
 numstep = 100
 time = 0.0
-dt = 0.9
+dt = 0.1
 pe = 0.0
 e = 0.0
 
@@ -83,14 +83,18 @@ outfile.close()
 infile.close()
 
 # Plot graph of x and y position
+pyplot.figure()
+pyplot.subplot(111)
 pyplot.plot(posValue_x,posValue_y)
-pyplot.title('Trajectory using Velovity Verlet')
+pyplot.title('Trajectory using Velocity Verlet')
 pyplot.xlabel('x position')
 pyplot.ylabel('y position')
-pyplot.show()
+pyplot.savefig('TrajectoryVV.png')
+pyplot.figure()
+pyplot.subplot(111)
 pyplot.plot(tValue,kE)
-pyplot.title('Total Energy of the particle againts time')
+pyplot.title('Total Energy of the particle against time')
 pyplot.xlabel('Time(s)')
 pyplot.ylabel('Energy(J)')
-pyplot.show()
+pyplot.savefig('EnergyVV.png')
 
