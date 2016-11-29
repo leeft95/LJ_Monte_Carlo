@@ -26,27 +26,26 @@ infile = open(filename,"r")
 p1 = Particle3D.from_file(infile)
 p2 = Particle3D.from_file(infile)
 
+# Set up simulation parameters
+numstep = 100
+time = 0.0
+dt = 0.1
+pe = 0.0
+e = 0.0
+
+
+# Set up data lists
+tValue = []
+posValue_x = [p1.position[0]]
+posValue_y = [p1.position[1]]
+kE = []
+outfile.write("Time" + "     X" + "        Y" + "        Total Energy" "\n")
+outfile.write("{0:f} {1:f} {2:f} {3}\n".format(time, p1.position[0], p1.position[1],pe))
+
 # Set up force constants
 fc2 = p1.mass
 fc4 = p2.mass
 force = -(fc2*fc4)/(np.linalg.norm(p1.position-p2.position)**3)*Particle3D.vec_sep(p1.position,p2.position)
-
-# Set up simulation parameters
-numstep = 1000
-time = 0.0
-dt = 0.1
-v = p1.leapVelocity(dt, force)
-e = p1.kineticEnergy(v)
-pe = 0.0
-
-
-# Set up data lists
-tValue = [time]
-posValue_x = [p1.position[0]]
-posValue_y = [p1.position[1]]
-kE = [e]
-outfile.write("Time" + "     X" + "        Y" + "        Total Energy" "\n")
-outfile.write("{0:f} {1:f} {2:f} {3}\n".format(time, p1.position[0], p1.position[1],pe))
 
 # Start the time integration loop
 
@@ -59,7 +58,7 @@ for i in range(numstep):
     v = p1.leapVelocity(dt, force)
     #update particle potential energy
     pe = -(fc2*fc4)/(np.linalg.norm(p1.position-p2.position))
-    e =  p1.kineticEnergy(v)
+    e =  pe + p1.kineticEnergy(v)
     # Increase time
     time = time + dt
     
@@ -67,7 +66,7 @@ for i in range(numstep):
     posValue_y.append(p1.position[1])
     posValue_x.append(p1.position[0])
     kE.append(e)
-    tValue.append(time)
+    tValue.append(time/(math.pi))
 	
     outfile.write("{0:f} {1:f} {2:f} {3}\n".format(time, p1.position[0], p1.position[1],pe))
 
@@ -76,10 +75,13 @@ outfile.close()
 infile.close()
 # Plot graph of x and y position
 pyplot.plot(posValue_x,posValue_y)
-pyplot.title('Particle trajectory')
-pyplot.xlabel('x')
-pyplot.ylabel('y')
+pyplot.title('Trajectory using Simplectic Euler')
+pyplot.xlabel('x position')
+pyplot.ylabel('y position')
 pyplot.show()
+pyplot.title('Total Energy of the particle againts time')
+pyplot.xlabel('Time(s)')
+pyplot.ylabel('Energy(J)')
 pyplot.plot(tValue,kE)
 pyplot.show()
 
