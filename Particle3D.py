@@ -24,18 +24,21 @@ This static method returns the vector seperation of two particles
     def vec_sep(p1,p2):
 	return p1 - p2
 
-    # Initialise a Particle3D instance
+    """Initialise a Particle3D instance
+    """
     def __init__(self,pos, vel, mass,name):
         self.position = pos
 	self.velocity = vel
 	self.mass = mass
 	self.name = name
 
-    # Formatted output as String
+    """ Formatted output as String
+    """
     def __str__(self):
         return " Name = " + str(self.name) + "\n postion = " + str(self.position) + "\n velocity = " + str(self.velocity) + "\n mass = " + str(self.mass)
     
-    # Kinetic energy, which is the each components KE summed up
+    """ Kinetic energy, which is the each components KE summed up
+    """
     def kineticEnergy(self, velocity):
 	e = 0.0
 	for i in range(0,3):
@@ -44,17 +47,20 @@ This static method returns the vector seperation of two particles
 		e = e + c	
 	return e
 
-    # Time integration methods
-    # First-order velocity update
+    """Time integration methods
+    Caclulating First-order velocity  """
     def leapVelocity(self, dt, force):
 	self.velocity = self.velocity + dt*force/self.mass
 	return self.velocity
 
-    # First-order position update
+    """ Calculating First Order Position
+    """
     def leapPos1st(self, dt):
         self.position = self.position + dt*self.velocity
 
-    # Second-order position update
+"""
+Calculating Second Order Positions 
+"""
     def leapPos2nd(self, dt, force):
         self.position = self.position + dt*self.velocity + 0.5*dt**2*force/self.mass
 	return self.position
