@@ -5,7 +5,29 @@ import math
 import numpy as np
 class Particle3D(object):
     """
-    This static method inputs data from an input file called particle.in where each value of the file corresponds to an attribute of the particle
+from_file:
+This static method inputs data from an input file called particle.in where each value of the file corresponds to an attribute of the particle
+
+vec_sep:      
+This static method returns the vector seperation of two particles
+
+__init__:
+From the static method the attributes of the particles are assigned and initialized
+
+__str__:
+Formated output of the particle attributes
+
+kineticEnergy:
+The kinetic energy of the particle is updated
+
+leapPos1st:
+The first order positon calculation method
+
+leapPos2nd:
+The second order positoin calcualtion method
+
+leapVelocity: 
+The velocity of the particle is updated using this method
     """
 
     @staticmethod
@@ -17,28 +39,22 @@ class Particle3D(object):
 	vel = np.array([float(tokens[4]),float(tokens[5]),float(tokens[6])],float)
 	mass = float(tokens[7])
 	return Particle3D(pos,vel,mass,name)
-    """
-This static method returns the vector seperation of two particles 
-    """
+
     @staticmethod
     def vec_sep(p1,p2):
 	return p1 - p2
 
-    """Initialise a Particle3D instance
-    """
     def __init__(self,pos, vel, mass,name):
         self.position = pos
 	self.velocity = vel
 	self.mass = mass
 	self.name = name
 
-    """ Formatted output as String
-    """
+
     def __str__(self):
         return " Name = " + str(self.name) + "\n postion = " + str(self.position) + "\n velocity = " + str(self.velocity) + "\n mass = " + str(self.mass)
     
-    """ Kinetic energy, which is the each components KE summed up
-    """
+   
     def kineticEnergy(self, velocity):
 	e = 0.0
 	for i in range(0,3):
@@ -47,20 +63,15 @@ This static method returns the vector seperation of two particles
 		e = e + c	
 	return e
 
-    """Time integration methods
-    Caclulating First-order velocity  """
+
     def leapVelocity(self, dt, force):
 	self.velocity = self.velocity + dt*force/self.mass
 	return self.velocity
 
-    """ Calculating First Order Position
-    """
     def leapPos1st(self, dt):
         self.position = self.position + dt*self.velocity
 
-"""
-Calculating Second Order Positions 
-"""
+ 
     def leapPos2nd(self, dt, force):
         self.position = self.position + dt*self.velocity + 0.5*dt**2*force/self.mass
 	return self.position
