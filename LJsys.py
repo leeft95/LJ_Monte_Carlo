@@ -3,6 +3,7 @@ import matplotlib.pyplot as pyplot
 import numpy as np
 import math as math
 from Particle3D import Particle3D
+import MDUtilities as MDUtilities
 from copy import copy
 
 
@@ -17,50 +18,66 @@ else:
 outfile = open(outfileName, "w")
 infile = open(filename,"r")
 
-p1 = Particle3D.from_file(infile)
-p2 = Particle3D.from_file(infile)
 
-numstep = 100
+pos = np.array([0.0,0.0,0.0],float)
+vel = np.array([0.0,0.0,0.0],float)
+mass = float(1)
+particles = [Particle3D.base(pos,vel,mass) for i in range(2)]
+
+rho = 1
+temp = 273
+MDUtilities.setInitialPositions(rho, particles)
+MDUtilities.setInitialVelocities(temp, particles)
+
+for i in range(2):
+	particles[i].name = i 
+
+for i in range(2):
+	print particles[i]
+	
+
+
+numstep = 1000
 time = 0.0
-dt = 0.01
+dt = 0.001
 pe = 0.0
 e = 0.0
 
-force = 48.0*((1/(np.linalg.norm(p1.position-p2.position)**14))-(1/(2*(np.linalg.norm(p1.position-p2.position)**8))))*Particle3D.vec_sep(p1.position,p2.position)
+force = 48.0*((1/(np.linalg.norm(particles[0].position-particles[1].position)**14))-(1/(2*(np.linalg.norm(particles[0].position-particles[1].position)**8))))*Particle3D.vec_sep(particles[0].position,particles[1].position)
 
 
 tValue = []	
-posValue_x = [p1.position[0]]
-posValue_y = [p1.position[1]]
+posValue_x = [particles[0].position[0]]
+posValue_y = [particles[0].position[1]]
 kE = []
 outfile.write("Time" + "     X" + "        Y" + "        Total Energy" "\n")
-outfile.write("{0:f} {1:f} {2:f} {3}\n".format(time, p1.position[0], p1.position[1],e))
+outfile.write("{0:f} {1:f} {2:f} {3}\n".format(time, particles[0].position[0], particles[0].position[1],e))
 
 for i in range(numstep):
-    """ Update particle position """
-    p1.leapPos2nd(dt, force)
-    """ Update force """
-    force_new = 48.0*((1/(np.linalg.norm(p1.position-p2.position)**14))-(1/(2*(np.linalg.norm(p1.position-p2.position)**8))))*Particle3D.vec_sep(p1.position,p2.position)
-    """ Update particle velocity, based on average
-    of current and new forces """
-    v = p1.leapVelocity(dt, 0.5*(force+force_new))
 
-    """ Reset force variable"""
+
+    particles[0].leapPos2nd(dt, force)
+ 
+    force_new = 48.0*((1/(np.linalg.norm(particles[0].position-particles[1].position)**14))-(1/(2*(np.linalg.norm(particles[0].position-particles[1].position)**8))))*Particle3D.vec_sep(particles[0].position,particles[1].position)
+    
+    v = particles[0].leapVelocity(dt, 0.5*(force+force_new))
+
+  
     force = copy(force_new)
-    """ update particle potential energy """
-    pe = 4.0*((1/(np.linalg.norm(p1.position-p2.position)**12))-(1/(np.linalg.norm(p1.position-p2.position)**6)))
-    e = pe + p1.kineticEnergy(v)
-    """ Increase time """
+  
+    pe = 4.0*((1/(np.linalg.norm(particles[0].position-particles[1].position)**12))-(1/(np.linalg.norm(particles[0].position-particles[1].position)**6)))
+    e = pe + particles[0].kineticEnergy(v)
+
     time = time + dt
     
-    posValue_y.append(p1.position[1])
-    posValue_x.append(p1.position[0])
+    posValue_y.append(particles[0].position[1])
+    posValue_x.append(particles[0].position[0])
     kE.append(e)
     tValue.append(time)	
 
-    outfile.write("{0:f} {1:f} {2:f} {3}\n".format(time, p1.position[0], p1.position[1],e))
+    outfile.write("{0:f} {1:f} {2:f} {3}\n".format(time, particles[0].position[0], particles[0].position[1],e))
 
-""" Close output and input file """
+
 outfile.close()
 infile.close()
 
