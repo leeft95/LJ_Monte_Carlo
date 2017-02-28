@@ -18,22 +18,22 @@ else:
 outfile = open(outfileName, "w")
 infile = open(filename,"r")
 
-
+n = 4
 pos = np.array([0.0,0.0,0.0],float)
 vel = np.array([0.0,0.0,0.0],float)
 mass = float(1)
-particles = [Particle3D.base(pos,vel,mass) for i in range(4)]
+particles = [Particle3D.base(pos,vel,mass) for i in range(n)]
 
 rho = 1
 temp = 0.1
 MDUtilities.setInitialPositions(rho, particles)
 MDUtilities.setInitialVelocities(temp, particles)
 
-for i in range(4):
+for i in range(n):
 	particles[i].name = "s" + str(i + 1)
 	print particles[i]
 
-numstep = 100
+numstep = 1000
 time = 0.0
 dt = 0.01
 pe = 0.0
@@ -45,35 +45,32 @@ posValue_y = [particles[0].position[1]]
 kE = []
 force = []
 force_new = []
-for j in range(0,4):
+for j in range(0,n):
 	print j
 	f = 0.0
 	print f
-	for i in range(0,4):
+	for i in range(0,n):
 		if i != j:
 			f = f + 48.0*((1/(np.linalg.norm(particles[j].position-particles[i].position)**14))-(1/(2*(np.linalg.norm(particles[j].position-particles[i].position)**8))))*Particle3D.vec_sep(particles[j].position,particles[i].position)
 	force.append(f)
 	print force[j]
-"""
+
 for i in range(numstep):
 	point = i+1
 	outfile.write(str(len(particles)) + "\nPoint = " + str(point))
+	for j in range(0,n):
+	    	particles[j].leapPos2nd(dt, force[j])
+		f = 0.0
+		for i in range(0,n):
+			if i != j:
+	   			f = f + 48.0*((1/(np.linalg.norm(particles[j].position-particles[i].position)**14))-(1/(2*(np.linalg.norm(particles[j].position-particles[i].position)**8))))*Particle3D.vec_sep(particles[j].position,particles[i].position)
+		force_new.append(f)
 
-	for j in range(len(particles)):
-	    particles[j].leapPos2nd(dt, force)
-	   
-	    for y in range(len(particles) - 1):
-			z = y + 1
-			x = 48.0*((1/(np.linalg.norm(particles[y].position-particles[z].position)**14))-(1/(2*(np.linalg.norm(particles[y].position-particles[z].position)**8))))*Particle3D.vec_sep(particles[y].position,particles[z].position)	
-			force_new += x
-	    
-	    		v = particles[y].leapVelocity(dt, 0.5*(force+force_new))
+	    	v = particles[j].leapVelocity(dt, 0.5*(force[j]+force_new[j]))
 
-			force = force_new
-	  
-	    		pe = 4.0*((1/(np.linalg.norm(particles[y].position-particles[z].position)**12))-(1/(np.linalg.norm(particles[y].position-particles[z].position)**6)))
-	    		e = pe + particles[y].kineticEnergy(v)
-	
+		force[j] = force_new[j]
+
+	  		
 	time = time + dt
 	posValue_y.append(particles[0].position[1])
 	posValue_x.append(particles[0].position[0])
@@ -104,4 +101,4 @@ pyplot.title('Total Energy of the particle against time')
 pyplot.xlabel('Time(s)')
 pyplot.ylabel('Energy(J)')
 pyplot.savefig('EnergyVV.png')
-"""
+
