@@ -19,10 +19,10 @@ outfile = open(outfileName, "w")
 infile = open(filename,"r")
 
 
-rho = 0.8446
-temp = 0.0768
+rho = 0.5
+temp = 0.5
 n = 4
-rcutoff = 2.5
+rcutoff = 1.0
 nAt= float(n)
 boxSize = (nAt/rho)**(1.0/3.0)
 
@@ -36,13 +36,12 @@ MDUtilities.setInitialPositions(rho, particles)
 MDUtilities.setInitialVelocities(temp, particles)
 
 for i in range(n):
-	particles[i].name = "s" + str(i + 1)
 	print particles[i]
 print len(particles)
-numstep = 10000
+numstep = 100
 time = 0.0
-dt = 0.00001
-tlog = 100
+dt = 0.001
+#tlog = 1
 pe = 0.0
 e = 0.0
 
@@ -56,8 +55,8 @@ force_new = 0.0
 
 for i in range(numstep):
 	point = i+1
-	if i%100 == 0:
-		outfile.write(str(n) + "\nPoint = " + str(point) + "\n")
+	#if i%tlog == 0:
+	outfile.write(str(n) + "\nPoint = " + str(point) + "\n")
 	for j in range(len(particles)):
 		print j	
 		for k in range(len(particles)):
@@ -110,8 +109,8 @@ for i in range(numstep):
            		z_pos = particles[j].position[2]+boxSize
             		particles[j].position[2] = z_pos
 
-		if i%100 == 0:
-            		outfile.write(str(p1) + " " + str(particles[j].position[0]) + " " + str(particles[j].position[1]) + " " + str(particles[j].position[2]) + "\n")
+		#if i%tlog == 0:
+            	outfile.write(str(p1) + " " + str(particles[j].position[0]) + " " + str(particles[j].position[1]) + " " + str(particles[j].position[2]) + "\n")
 
 	for l in range(len(particles)): 
         	for m in range(len(particles)): 
@@ -131,15 +130,15 @@ for i in range(numstep):
 				    	zposi=particles[m].position[2]-boxSize
 				else:
 				    	zposi=particles[m].position[2]
-				imagepos= np.array((xposi, yposi, zposi), float) 
-				image= Particle3D(imagepos, particles[m].velocity, particles[m].mass)
-				r= Particle3D.vec_sep(particles[l], image)
-				magr= math.sqrt(sum(r*r))
-				if magr<=rcutoff:         
-				    pot = Particle3D.Lj_pot(particles[l], image)
-				    frce = Particle3D.Lj_force(particles[l], image)
-				    force_new = force_new+frce
-				    potential_new = pe+pot   
+				img_pos= np.array((xposi, yposi, zposi), float) 
+				img = Particle3D(img_pos, particles[m].velocity, particles[m].mass)
+				img_sep = Particle3D.vec_sep(particles[l], img)
+				img_sqmag = math.sqrt(sum(img_sep*img_sep))
+				if img_sqmag<=rcutoff:         
+				    pot_mod = Particle3D.Lj_pot(particles[l], img)
+				    f_mod = Particle3D.Lj_force(particles[l], img)
+				    force_new = force_new + f_mod
+				    potential_new = pe + pot_mod   
         
 		particles[l].leapVelocity(dt, 0.5*(force+force_new))
 		force_new = 0
