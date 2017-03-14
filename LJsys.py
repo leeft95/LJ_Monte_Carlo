@@ -18,24 +18,31 @@ else:
 outfile = open(outfileName, "w")
 infile = open(filename,"r")
 
+
+rho = 0.8446
+temp = 0.0768
 n = 4
+rcutoff = 2.5
+nAt= float(n)
+boxSize = (nAt/rho)**(1.0/3.0)
+
 pos = np.array([0.0,0.0,0.0],float)
 vel = np.array([0.0,0.0,0.0],float)
 mass = float(1)
 particles = [Particle3D.base(pos,vel,mass) for i in range(n)]
 
-rho = 1
-temp = 0.1
+
 MDUtilities.setInitialPositions(rho, particles)
 MDUtilities.setInitialVelocities(temp, particles)
 
 for i in range(n):
 	particles[i].name = "s" + str(i + 1)
 	print particles[i]
-
-numstep = 1000
+print len(particles)
+numstep = 10000
 time = 0.0
-dt = 0.01
+dt = 0.00001
+tlog = 100
 pe = 0.0
 e = 0.0
 
@@ -43,50 +50,106 @@ tValue = []
 posValue_x = [particles[0].position[0]]
 posValue_y = [particles[0].position[1]]
 kE = []
-force = []
-force_new = []
-for j in range(0,n):
-	print j
-	f = 0.0
-	print f
-	for i in range(0,n):
-		if i != j:
-			f = f + 48.0*((1/(np.linalg.norm(particles[j].position-particles[i].position)**14))-(1/(2*(np.linalg.norm(particles[j].position-particles[i].position)**8))))*Particle3D.vec_sep(particles[j].position,particles[i].position)
-	force.append(f)
-	print force[j]
+force = 0.0
+force_new = 0.0
+
 
 for i in range(numstep):
 	point = i+1
-	outfile.write(str(len(particles)) + "\nPoint = " + str(point))
-	for j in range(0,n):
-	    	particles[j].leapPos2nd(dt, force[j])
-		f = 0.0
-		for i in range(0,n):
-			if i != j:
-	   			f = f + 48.0*((1/(np.linalg.norm(particles[j].position-particles[i].position)**14))-(1/(2*(np.linalg.norm(particles[j].position-particles[i].position)**8))))*Particle3D.vec_sep(particles[j].position,particles[i].position)
-		force_new.append(f)
-
-	    	v = particles[j].leapVelocity(dt, 0.5*(force[j]+force_new[j]))
-
-		force[j] = force_new[j]
-
-	  		
-	time = time + dt
-	posValue_y.append(particles[0].position[1])
-	posValue_x.append(particles[0].position[0])
-	kE.append(e)
-	tValue.append(time)   		
-	for i in range(len(particles)):
-	    	outfile.write("\n" + str(particles[i].name) + str(point) + " " + str(particles[i].position[0]) + str(point) + " " + str(particles[i].position[1]) + str(point) + " " + str(particles[i].position[2]) + str(point)) 
-	outfile.write("\n")
+	if i%100 == 0:
+		outfile.write(str(n) + "\nPoint = " + str(point) + "\n")
+	for j in range(len(particles)):
+		print j	
+		for k in range(len(particles)):
+			if j!=k:
+				print k
+				vecsep_x = particles[j].position[0]-particles[k].position[0]	
+				vecsep_y = particles[j].position[1]-particles[k].position[1]	
+				vecsep_z = particles[j].position[2]-particles[k].position[2]	
+				if (vecsep_x>=0.5*boxSize): 
+					xpos_im = particles[k].position[0]-boxSize
+				else:
+					xpos_im = particles[k].position[0]
+				if (vecsep_y>=0.5*boxSize): 
+					ypos_im = particles[k].position[1]-boxSize
+				else:
+					ypos_im = particles[k].position[1]
+				if (vecsep_z>=0.5*boxSize):
+					zpos_im = particles[k].position[2]-boxSize
+				else:
+					zpos_im = particles[k].position[2]
+				pos_img = np.array((xpos_im,ypos_im,zpos_im),dtype = float)
+				img = Particle3D(pos_img, particles[k].velocity, particles[k].mass)
 			
+				img_sep = Particle3D.vec_sep(particles[j],img)
+				img_sqmag = math.sqrt(sum(img_sep*img_sep))  
+				if img_sqmag<=rcutoff:
+					pe_mod = Particle3D.Lj_pot(particles[j], img)
+		            		f_mod = Particle3D.Lj_force(particles[j], img)	
+					force = force + f_mod
+					pe = pe + pe_mod
 
-    
+		p1 = j+1
+	    	particles[j].leapPos2nd(dt,force)
+		if particles[j].position[0]>=boxSize:
+           		x_pos = particles[j].position[0]-boxSize
+            		particles[j].position[0]= x_pos
+        	if particles[j].position[0]<=str(0):
+           		x_pos = particles[j].position[0]+boxSize
+            		particles[j].position[0] = x_pos
+		if particles[j].position[1]>=boxSize:
+           		y_pos = particles[j].position[1]-boxSize
+            		particles[j].position[1]= y_pos
+        	if particles[j].position[1]<=str(0):
+           		y_pos = particles[j].position[1]+boxSize
+            		particles[j].position[1] = y_pos
+		if particles[j].position[2]>=boxSize:
+           		z_pos = particles[j].position[2]-boxSize
+            		particles[j].position[2]= z_pos
+        	if particles[j].position[2]<=str(0):
+           		z_pos = particles[j].position[2]+boxSize
+            		particles[j].position[2] = z_pos
+
+		if i%100 == 0:
+            		outfile.write(str(p1) + " " + str(particles[j].position[0]) + " " + str(particles[j].position[1]) + " " + str(particles[j].position[2]) + "\n")
+
+	for l in range(len(particles)): 
+        	for m in range(len(particles)): 
+		    	if l!=m: 
+				x_sep= particles[l].position[0]-particles[m].position[0]
+				y_sep= particles[l].position[1]-particles[m].position[1]
+				z_sep= particles[l].position[2]-particles[m].position[2] 
+				if x_sep>=0.5*boxSize: 
+				    	xposi=particles[m].position[0]-boxSize
+				else:
+				    	xposi=particles[m].position[0]
+			       	if x_sep>=0.5*boxSize:
+				    	yposi=particles[m].position[1]-boxSize
+				else:
+				   	yposi=particles[m].position[1]
+				if z_sep>=0.5*boxSize:
+				    	zposi=particles[m].position[2]-boxSize
+				else:
+				    	zposi=particles[m].position[2]
+				imagepos= np.array((xposi, yposi, zposi), float) 
+				image= Particle3D(imagepos, particles[m].velocity, particles[m].mass)
+				r= Particle3D.vec_sep(particles[l], image)
+				magr= math.sqrt(sum(r*r))
+				if magr<=rcutoff:         
+				    pot = Particle3D.Lj_pot(particles[l], image)
+				    frce = Particle3D.Lj_force(particles[l], image)
+				    force_new = force_new+frce
+				    potential_new = pe+pot   
+        
+		particles[l].leapVelocity(dt, 0.5*(force+force_new))
+		force_new = 0
+		force = 0
+		potential = 0
 
 
 outfile.close()
 infile.close()
-
+"""
 pyplot.figure()
 pyplot.subplot(111)
 pyplot.plot(posValue_y,posValue_x)
@@ -101,4 +164,4 @@ pyplot.title('Total Energy of the particle against time')
 pyplot.xlabel('Time(s)')
 pyplot.ylabel('Energy(J)')
 pyplot.savefig('EnergyVV.png')
-
+"""

@@ -24,35 +24,47 @@ leapPos1st:
 The first order positon calculation method
 
 leapPos2nd:
-The second order positoin calcualtion method
+The second order position calcualtion method
 
 leapVelocity: 
 The velocity of the particle is updated using this method
-    """
-
+    
+"""
     @staticmethod
-    def from_file(infile):
-	line = infile.readline()
-	tokens = line.split(",")
-	name = str(tokens[0])
-	pos = np.array([float(tokens[1]),float(tokens[2]),float(tokens[3])],float)
-	vel = np.array([float(tokens[4]),float(tokens[5]),float(tokens[6])],float)
-	mass = float(tokens[7])
-	return Particle3D(pos,vel,mass,name)
+    def base(pos,vel,mass):
+	position = pos
+	velocity = vel
+	mass = mass
+	return Particle3D(pos,vel,mass)
 
+    
+    def Lj_pot(particles,img):
+	vec_sep = Particle3D.vec_sep(particles,img)
+	
+	vec_sqmag = math.sqrt(sum(vec_sep*vec_sep))
+	print vec_sqmag
+	pot = 4*((1/(vec_sqmag)**12)-(1/(vec_sqmag)**6))
+	return pot
+
+    def Lj_force(particles,img):
+	vec_sep = Particle3D.vec_sep(particles,img)
+	vec_sqmag = math.sqrt(sum(vec_sep*vec_sep))
+	force = 48.0*((1/(vec_sqmag)**14))-(1/(2*(vec_sqmag)**8))*Particle3D.vec_sep(particles,img)
+  	return force
+  
     @staticmethod
     def vec_sep(p1,p2):
-	return p1 - p2
+	return p1.position - p2.position
 
-    def __init__(self,pos, vel, mass,name):
+    def __init__(self,pos, vel, mass):
         self.position = pos
 	self.velocity = vel
 	self.mass = mass
-	self.name = name
+	
 
 
     def __str__(self):
-        return " Name = " + str(self.name) + "\n postion = " + str(self.position) + "\n velocity = " + str(self.velocity) + "\n mass = " + str(self.mass)
+        return  " postion = " + str(self.position) + "\n velocity = " + str(self.velocity) + "\n mass = " + str(self.mass)
     
    
     def kineticEnergy(self, velocity):
