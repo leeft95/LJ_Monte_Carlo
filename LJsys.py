@@ -19,10 +19,10 @@ outfile = open(outfileName, "w")
 infile = open(filename,"r")
 
 
-rho = 0.5
-temp = 0.5
-n = 4
-rcutoff = 1.0
+rho = 0.8446
+temp = 0.0768
+n = 108
+rcutoff = 2.5
 nAt= float(n)
 boxSize = (nAt/rho)**(1.0/3.0)
 
@@ -38,10 +38,10 @@ MDUtilities.setInitialVelocities(temp, particles)
 for i in range(n):
 	print particles[i]
 print len(particles)
-numstep = 100
+numstep = 10000
 time = 0.0
-dt = 0.001
-#tlog = 1
+dt = 0.0001
+tlog = 100
 pe = 0.0
 e = 0.0
 
@@ -55,13 +55,11 @@ force_new = 0.0
 
 for i in range(numstep):
 	point = i+1
-	#if i%tlog == 0:
-	outfile.write(str(n) + "\nPoint = " + str(point) + "\n")
+	if i%100 == 0:
+		outfile.write(str(n) + "\nPoint = " + str(point) + "\n")
 	for j in range(len(particles)):
-		print j	
 		for k in range(len(particles)):
 			if j!=k:
-				print k
 				vecsep_x = particles[j].position[0]-particles[k].position[0]	
 				vecsep_y = particles[j].position[1]-particles[k].position[1]	
 				vecsep_z = particles[j].position[2]-particles[k].position[2]	
@@ -92,25 +90,25 @@ for i in range(numstep):
 	    	particles[j].leapPos2nd(dt,force)
 		if particles[j].position[0]>=boxSize:
            		x_pos = particles[j].position[0]-boxSize
-            		particles[j].position[0]= x_pos
+            		particles[j].position[0] = x_pos
         	if particles[j].position[0]<=str(0):
            		x_pos = particles[j].position[0]+boxSize
             		particles[j].position[0] = x_pos
 		if particles[j].position[1]>=boxSize:
            		y_pos = particles[j].position[1]-boxSize
-            		particles[j].position[1]= y_pos
+            		particles[j].position[1] = y_pos
         	if particles[j].position[1]<=str(0):
            		y_pos = particles[j].position[1]+boxSize
             		particles[j].position[1] = y_pos
 		if particles[j].position[2]>=boxSize:
            		z_pos = particles[j].position[2]-boxSize
-            		particles[j].position[2]= z_pos
+            		particles[j].position[2] = z_pos
         	if particles[j].position[2]<=str(0):
            		z_pos = particles[j].position[2]+boxSize
             		particles[j].position[2] = z_pos
 
-		#if i%tlog == 0:
-            	outfile.write(str(p1) + " " + str(particles[j].position[0]) + " " + str(particles[j].position[1]) + " " + str(particles[j].position[2]) + "\n")
+		if i%100 == 0:
+            		outfile.write(str(p1) + " " + str(particles[j].position[0]) + " " + str(particles[j].position[1]) + " " + str(particles[j].position[2]) + "\n")
 
 	for l in range(len(particles)): 
         	for m in range(len(particles)): 
@@ -135,10 +133,10 @@ for i in range(numstep):
 				img_sep = Particle3D.vec_sep(particles[l], img)
 				img_sqmag = math.sqrt(sum(img_sep*img_sep))
 				if img_sqmag<=rcutoff:         
-				    pot_mod = Particle3D.Lj_pot(particles[l], img)
-				    f_mod = Particle3D.Lj_force(particles[l], img)
-				    force_new = force_new + f_mod
-				    potential_new = pe + pot_mod   
+				    pot_mod1 = Particle3D.Lj_pot(particles[l], img)
+				    f_mod1 = Particle3D.Lj_force(particles[l], img)
+				    force_new = force_new + f_mod1
+				    potential_new = pe + pot_mod1   
         
 		particles[l].leapVelocity(dt, 0.5*(force+force_new))
 		force_new = 0
