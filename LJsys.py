@@ -120,7 +120,7 @@ for i in range(numstep):
 				    	xposi=particles[m].position[0]-boxSize
 				else:
 				    	xposi=particles[m].position[0]
-			       	if x_sep>=0.5*boxSize:
+			       	if y_sep>=0.5*boxSize:
 				    	yposi=particles[m].position[1]-boxSize
 				else:
 				   	yposi=particles[m].position[1]
