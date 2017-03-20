@@ -1,3 +1,4 @@
+"""Importing necessary packages and classes"""
 import sys
 import matplotlib.pyplot as pyplot
 import numpy as np
@@ -6,7 +7,7 @@ from Particle3D import Particle3D
 import MDUtilities as MDUtilities
 from copy import copy
 
-
+""" Ensure user inputs correct number of arguments"""
 if len(sys.argv)!=3:
     print "Wrong number of arguments."
     print "Usage: " + sys.argv[0] + "<input file>" + "<output file>"
@@ -14,37 +15,60 @@ if len(sys.argv)!=3:
 else:
     filename = sys.argv[1]    
     outfileName = sys.argv[2]
-
+"""Open files to write on and read from"""
 outfile = open(outfileName, "w")
 infile = open(filename,"r")
 
-
+"""Numerically defining values for variables:
+Where 	rho= number density of particles
+	temp= temperature
+	n= number of particles in box
+	rcutoff= Cut off radius beyond which force between particles is not calculated (negligible)
+	nAt= number of particles converted into float form
+	boxsize= length of each side of the box"""
 rho = 0.8446
 temp = 0.0768
 n = 108
 rcutoff = 2.5
 nAt= float(n)
 boxSize = (nAt/rho)**(1.0/3.0)
+"""set 3D arrays for position and velocity of particles
+where 	pos= numpy array for position
+	vel= numpy array for velocity
+	mass= mass of particle
+	particles"""
 
 pos = np.array([0.0,0.0,0.0],float)
 vel = np.array([0.0,0.0,0.0],float)
 mass = float(1)
 particles = [Particle3D.base(pos,vel,mass) for i in range(n)]
 
-
+"""Use MDUtilities class to set initial positions and velocities for particles"""
 MDUtilities.setInitialPositions(rho, particles)
 MDUtilities.setInitialVelocities(temp, particles)
-
+"""Use a for loop to display the resulting mass, positions, and velocities of the particles"""
 for i in range(n):
 	print particles[i]
 print len(particles)
+"""Define the timescale for the plot
+	numstep= number of steps in the program
+	time= time (initial value set to zero)
+	dt= increment by which time is increased for each step
+	tlog= number of time steps before position vector is updated
+	pe= potential energy (initial value set to zero)
+	e= total energy (initial value set to zero)"""
 numstep = 10000
 time = 0.0
 dt = 0.0001
 tlog = 100
 pe = 0.0
 e = 0.0
-
+""" Creating lists for each numstep
+	tvalue= list of time values of each step
+	
+	kE= list of kinetic energy values for each step
+	force= force between particles before positional update
+	force_new= between particles after positional update"""
 tValue = []	
 posValue_x = [particles[0].position[0]]
 posValue_y = [particles[0].position[1]]
@@ -52,7 +76,7 @@ kE = []
 force = 0.0
 force_new = 0.0
 
-
+""" """
 for i in range(numstep):
 	point = i+1
 	if i%100 == 0:
