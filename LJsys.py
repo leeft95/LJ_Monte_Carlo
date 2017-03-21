@@ -76,7 +76,9 @@ kE = []
 force = 0.0
 force_new = 0.0
 
-""" """
+"""This loop ensures the Minimum Image Convention is to be obeyed. 
+It is also ensured that no particles are used more than once in the calculation.
+The closest particles are determined and their interaction calculated."""
 for i in range(numstep):
 	point = i+1
 	if i%100 == 0:
@@ -109,7 +111,8 @@ for i in range(numstep):
 		            		f_mod = Particle3D.Lj_force(particles[j], img)	
 					force = force + f_mod
 					pe = pe + pe_mod
-
+""""Here, the periodic boundary conditions are set. 
+This ensures a finite number of particles are modeled and that when one particle leaves the box, it re-enters from the other side"""
 		p1 = j+1
 	    	particles[j].leapPos2nd(dt,force)
 		if particles[j].position[0]>=boxSize:
@@ -133,7 +136,8 @@ for i in range(numstep):
 
 		if i%100 == 0:
             		outfile.write(str(p1) + " " + str(particles[j].position[0]) + " " + str(particles[j].position[1]) + " " + str(particles[j].position[2]) + "\n")
-
+""" Again, the minimum image convention is laid out. 
+The forces are computed for the initial position and for after the position is updated."""
 	for l in range(len(particles)): 
         	for m in range(len(particles)): 
 		    	if l!=m: 
