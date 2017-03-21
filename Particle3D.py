@@ -40,16 +40,14 @@ The velocity of the particle is updated using this method
     
     def Lj_pot(particles,img):
 	vec_sep = Particle3D.vec_sep(particles,img)
-	
 	vec_sqmag = math.sqrt(sum(vec_sep*vec_sep))
-	print vec_sqmag
-	pot = 4*((1/(vec_sqmag)**12)-(1/(vec_sqmag)**6))
+	pot = 4*(1/((vec_sqmag)**12)-1/((vec_sqmag)**6))
 	return pot
 
     def Lj_force(particles,img):
 	vec_sep = Particle3D.vec_sep(particles,img)
 	vec_sqmag = math.sqrt(sum(vec_sep*vec_sep))
-	force = 48.0*((1/(vec_sqmag)**14))-(1/(2*(vec_sqmag)**8))*Particle3D.vec_sep(particles,img)
+	force = 48.0*(1/((vec_sqmag)**14)-1/(2*(vec_sqmag)**8))*Particle3D.vec_sep(particles,img)
   	return force
   
     @staticmethod
@@ -67,11 +65,11 @@ The velocity of the particle is updated using this method
         return  " postion = " + str(self.position) + "\n velocity = " + str(self.velocity) + "\n mass = " + str(self.mass)
     
    
-    def kineticEnergy(self, velocity):
+    def kineticEnergy(particles):
 	e = 0.0
 	for i in range(0,3):
-		b = float(velocity[i])
-		c = 0.5*self.mass*b**2
+		b = float(particles.velocity[i])
+		c = 0.5*particles.mass*b**2
 		e = e + c	
 	return e
 
