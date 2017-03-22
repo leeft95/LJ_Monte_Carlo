@@ -38,17 +38,20 @@ The velocity of the particle is updated using this method
 	return Particle3D(pos,vel,mass)
 
     
-    def Lj_pot(particles,img):
-	vec_sep = Particle3D.vec_sep(particles,img)
-	vec_sqmag = math.sqrt(sum(vec_sep*vec_sep))
+    def Lj_pot(particles,vec_sqmag):
 	pot = 4*(1/((vec_sqmag)**12)-1/((vec_sqmag)**6))
 	return pot
 
-    def Lj_force(particles,img):
-	vec_sep = Particle3D.vec_sep(particles,img)
-	vec_sqmag = math.sqrt(sum(vec_sep*vec_sep))
-	force = 48.0*(1/((vec_sqmag)**14)-1/(2*(vec_sqmag)**8))*Particle3D.vec_sep(particles,img)
+    def Lj_force(particles,vec_sep,vec_sqmag):
+	force = 48.0*(1/((vec_sqmag)**14)-1/(2*(vec_sqmag)**8))*vec_sep
   	return force
+	
+	
+
+    def MsD(particles,particles1):
+	vec_sep = Particle3D.vec_sep(particles,particles1)
+	sqmag = math.sqrt(sum(vec_sep*vec_sep))
+	return sqmag
   
     @staticmethod
     def vec_sep(p1,p2):
