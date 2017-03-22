@@ -49,13 +49,65 @@ The velocity of the particle is updated using this method
 	
 
     def MsD(particles,particles1):
-	vec_sep = Particle3D.vec_sep(particles,particles1)
+	vec_sep = particles.position-particles1.position
 	sqmag = math.sqrt(sum(vec_sep*vec_sep))
 	return sqmag
   
     @staticmethod
-    def vec_sep(p1,p2):
-	return p1.position - p2.position
+    def vec_sep(p1,p2,boxSize):
+	vecsep_x = p1.position[0]-p2.position[0]
+				
+	vecsep_y = p1.position[1]-p2.position[1]
+				
+	vecsep_z = p1.position[2]-p2.position[2]
+				
+				
+	if (vecsep_x <= -0.5*boxSize): 
+		vecsep_x = vecsep_x+boxSize
+	if (vecsep_x > 0.5*boxSize):
+		vecsep_x = vecsep_x-boxSize
+	if (vecsep_y<= -0.5*boxSize): 
+		vecsep_y = vecsep_y+boxSize
+	if (vecsep_y> 0.5*boxSize):
+		vecsep_y = vecsep_y-boxSize
+	if (vecsep_z <= -0.5*boxSize): 
+		vecsep_z = vecsep_z+boxSize
+	if (vecsep_z > 0.5*boxSize):
+		vecsep_z = vecsep_z-boxSize
+								
+	vec_sep = np.array([vecsep_x,vecsep_y,vecsep_z])
+	return vec_sep
+
+
+    @staticmethod
+    def PBC(particles,boxSize):
+    	if particles.position[0]>=boxSize:
+          	x_pos = particles.position[0]-boxSize
+            	particles.position[0] = x_pos
+			
+        if particles.position[0]<0.0:
+           	x_pos = particles.position[0]+boxSize
+            	particles.position[0] = x_pos
+			
+	if particles.position[1]>=boxSize:
+           	y_pos = particles.position[1]-boxSize
+            	particles.position[1] = y_pos
+			
+       	if particles.position[1]<0.0:
+           	y_pos = particles.position[1]+boxSize
+            	particles.position[1] = y_pos
+			
+	if particles.position[2]>=boxSize:	
+           	z_pos = particles.position[2]-boxSize
+            	particles.position[2] = z_pos
+			
+        if particles.position[2]<0.0:
+           	z_pos = particles.position[2]+boxSize
+            	particles.position[2] = z_pos
+	return particles.position
+    
+
+
 
     def __init__(self,pos, vel, mass):
         self.position = pos

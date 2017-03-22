@@ -28,9 +28,8 @@ rho = float(tokens[2])
 nAt = float(n)
 rcutoff = float(tokens[3])
 boxSize = (nAt/rho)**(1.0/3.0)
-x_rsize = 1.0 /boxSize
-y_rsize = 1.0 /boxSize
-z_rsize = 1.0 /boxSize
+dr = 0.1
+maxr = 3
 
 pos = np.array([0.0,0.0,0.0],float)
 vel = np.array([0.0,0.0,0.0],float)
@@ -40,14 +39,37 @@ particles = [Particle3D.base(pos,vel,mass) for i in range(n)]
 
 MDUtilities.setInitialPositions(rho, particles)
 MDUtilities.setInitialVelocities(temp, particles)
+"""
+def RDF(particles,n,maxr,dr,count,rho):
+	i = 0	
+	j = 0	
+	rmin = 0
+	rmax = dr
+	ci = 0
+	while i < n:
+		for j in range (n):
+			rmin = 0
+			rmax = dr
+			ci = 0	
+			if i!= j:
+				vec_sep = Particle3D.vec_sep(particles[i],particles[j],boxSize)
+				sep_mag = np.linalg.norm(vec_sep)
+				while rmax < maxr:
+					if sep_mag > rmin and sep_mag < rmax:
+						#print len(count)
+						count[ci] = count[ci] + (1.0)/(n*4*rho*math.pi*dr*(rmin+(dr/2))**2)
+						rmax = maxr + 1
+					else:
+						ci = ci +1
+						rmin = rmin + dr
+						rmax = rmax + dr
+		i = i+1
+	return count
 
-
-
-
-
+"""
 numstep = 10000
 time = 0.0
-dt = 0.0001
+dt = 0.001
 tlog = 100
 pe = 0.0
 e = 0.0
@@ -57,9 +79,13 @@ particles1 = copy.deepcopy(particles)
 
 tvalue = []
 MSSD = []
+rds_list = []
+count = np.array([30])
 posValue_x = [particles[0].position[0]]
 posValue_y = [particles[0].position[1]]
+tE = []
 kE = []
+pel = []
 force = 0.0
 force_new = 0.0
 potential_new = 0.0
@@ -73,28 +99,7 @@ for i in range(numstep):
 	for j in range(len(particles)):
 		for k in range(len(particles)):
 			if j!= k:
-				vecsep_x = particles[j].position[0]-particles[k].position[0]
-				
-				vecsep_y = particles[j].position[1]-particles[k].position[1]
-				
-				vecsep_z = particles[j].position[2]-particles[k].position[2]
-				
-				
-				if (vecsep_x <= -0.5*boxSize): 
-					vecsep_x = vecsep_x+boxSize
-				if (vecsep_x > 0.5*boxSize):
-					vecsep_x = vecsep_x-boxSize
-				if (vecsep_y<= -0.5*boxSize): 
-					vecsep_y = vecsep_y+boxSize
-				if (vecsep_y> 0.5*boxSize):
-					vecsep_y = vecsep_y-boxSize
-				if (vecsep_z <= -0.5*boxSize): 
-					vecsep_z = vecsep_z+boxSize
-				if (vecsep_z > 0.5*boxSize):
-					vecsep_z = vecsep_z-boxSize
-				
-					
-				vec_sep = np.array([vecsep_x,vecsep_y,vecsep_z])				
+				vec_sep = Particle3D.vec_sep(particles[j],particles[k],boxSize)
 				
 				vec_sepm = np.linalg.norm(vec_sep)
 				
@@ -107,41 +112,12 @@ for i in range(numstep):
 		
 		p1 = j+1
 	    	particles[j].leapPos2nd(dt,force)
+		particles[j].position = Particle3D.PBC(particles[j],boxSize)	
 		
-		if particles[j].position[0]>=boxSize:
-			
-           		x_pos = particles[j].position[0]-boxSize
-            		particles[j].position[0] = x_pos
-			
-        	if particles[j].position[0]<0.0:
-			
-           		x_pos = particles[j].position[0]+boxSize
-            		particles[j].position[0] = x_pos
-			
-		if particles[j].position[1]>=boxSize:
-			
-           		y_pos = particles[j].position[1]-boxSize
-            		particles[j].position[1] = y_pos
-			
-        	if particles[j].position[1]<0.0:
-			
-           		y_pos = particles[j].position[1]+boxSize
-            		particles[j].position[1] = y_pos
-			
-		if particles[j].position[2]>=boxSize:
-			
-           		z_pos = particles[j].position[2]-boxSize
-            		particles[j].position[2] = z_pos
-			
-        	if particles[j].position[2]<0.0:
-			
-           		z_pos = particles[j].position[2]+boxSize
-            		particles[j].position[2] = z_pos
-			
 		if i%100 == 0:
 			bb = 0
 			for aa in range(len(particles)):
-				seppy = Particle3D.MsD(particles[aa],particles1[bb])
+				seppy = Particle3D.MsD(particles[aa],particles1[bb])			
 				sum_seppy = seppy + seppy
 				bb = bb + 1			
 	            	outfile1_0.write(str(p1) + " " + str(particles[j].position[0]) + " " + str(particles[j].position[1]) + " " + str(particles[j].position[2]) + "\n")
@@ -151,26 +127,12 @@ for i in range(numstep):
 		tvalue.append(gg)
 		gg = gg + 1
 		MSSD.append(MsD)
+		#count = copy.deepcopy(RDF(particles,n,maxr,dr,count,rho))
+		#print count
 	for l in range(len(particles)): 
         	for m in range(len(particles)): 
 		    	if l!=m: 
-				x_sep= particles[l].position[0]-particles[m].position[0]
-				y_sep= particles[l].position[1]-particles[m].position[1]
-				z_sep= particles[l].position[2]-particles[m].position[2]
-				if (x_sep<=0.5*-1*boxSize): 
-					x_sep = x_sep+boxSize
-				if (x_sep> 0.5*boxSize):
-					x_sep = x_sep-boxSize
-				if (y_sep<=0.5*-1*boxSize): 
-					y_sep = y_sep+boxSize
-				if (y_sep> 0.5*boxSize):
-					y_sep = y_sep-boxSize
-				if (z_sep<=0.5*-1*boxSize): 
-					z_sep = z_sep+boxSize
-				if (z_sep> 0.5*boxSize):
-					z_sep = z_sep-boxSize
-				vec_sep1 = np.array([x_sep,y_sep,z_sep])
-				
+				vec_sep1 = Particle3D.vec_sep(particles[l],particles[m],boxSize)
 				vec_sepm1 = np.linalg.norm(vec_sep1)
 
 				if vec_sepm1<=rcutoff:
@@ -181,38 +143,52 @@ for i in range(numstep):
 					peo = potential_new/point  
 		v = particles[l].leapVelocity(dt, 0.5*(force+force_new))
 		ke = Particle3D.kineticEnergy(particles[l])
-		total_energy = potential_new/point + ke		
+		total_energy = potential_new/point + ke	
+			
 		if l%100 == 0:		
 			outfile2_0.write(str(total_energy) + " te \n" + str(ke) +  " ke \n" + str(peo) + " pe\n" + str(MsD) + " MSD\n\n" + str(force) + " force \n\n")
 		force_new = 0
 		force = 0
 		potential = 0
 		time = time + dt
-	
+	if i%100 == 0:		
+		tE.append(total_energy)
+		pel.append(peo)
+		kE.append(ke)
 
 
 outfile1_0.close()
 outfile2_0.close()
 infile.close()
 tValue = np.array(tvalue)
-print tValue
-print len(tValue)
+
 MSD = np.array(MSSD)
-print MSD
-print len(MSD)
 pyplot.figure()
 pyplot.subplot(111)
 pyplot.plot(tValue,MSD)
 pyplot.title('MSD')
-pyplot.xlabel('Time')
+pyplot.xlabel('Timestep')
 pyplot.ylabel('MSD')
 pyplot.savefig('MSD.png')
-"""
+pyplot.figure()
+pyplot.subplot(111)
+pyplot.plot(tValue,tE)
+pyplot.title('Total Energy of the particle against timestep')
+pyplot.xlabel('Timestep')
+pyplot.ylabel('Energy(J)')
+pyplot.savefig('EnergyT.png')
+pyplot.figure()
+pyplot.subplot(111)
+pyplot.plot(tValue,pel)
+pyplot.title('Potential Energy of the particle against timestep')
+pyplot.xlabel('Timestep')
+pyplot.ylabel('Energy(J)')
+pyplot.savefig('EnergyP.png')
 pyplot.figure()
 pyplot.subplot(111)
 pyplot.plot(tValue,kE)
-pyplot.title('Total Energy of the particle against time')
-pyplot.xlabel('Time(s)')
+pyplot.title('Kinetic Energy of the particle against timestep')
+pyplot.xlabel('Timestep')
 pyplot.ylabel('Energy(J)')
-pyplot.savefig('EnergyVV.png')
-"""
+pyplot.savefig('EnergykE.png')
+
