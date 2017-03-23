@@ -5,31 +5,31 @@ import math
 import numpy as np
 class Particle3D(object):
     """
-from_file:
-This static method inputs data from an input file called particle.in where each value of the file corresponds to an attribute of the particle
+   from_file:
+   This static method inputs data from an input file called particle.in where each value of the file corresponds to an attribute of the particle
 
-vec_sep:      
-This static method returns the vector seperation of two particles
+   vec_sep:      
+   This static method returns the vector seperation of two particles
 
-__init__:
-From the static method the attributes of the particles are assigned and initialized
+   __init__:
+   From the static method the attributes of the particles are assigned and initialized
 
-__str__:
-Formated output of the particle attributes
+   __str__:
+   Formated output of the particle attributes
 
-kineticEnergy:
-The kinetic energy of the particle is updated
+   kineticEnergy:
+   The kinetic energy of the particle is updated
 
-leapPos1st:
-The first order positon calculation method
+   leapPos1st:
+   The first order positon calculation method
 
-leapPos2nd:
-The second order position calcualtion method
+   leapPos2nd:
+   The second order position calcualtion method
 
-leapVelocity: 
-The velocity of the particle is updated using this method
+   leapVelocity: 
+   The velocity of the particle is updated using this method
     
-"""
+    """
     @staticmethod
     def base(pos,vel,mass):
 	position = pos
@@ -46,13 +46,16 @@ The velocity of the particle is updated using this method
 	force = 48.0*(1/((vec_sqmag)**14)-1/(2*(vec_sqmag)**8))*vec_sep
   	return force
 	
-	
+    #MSD Calculates the square of the vector separation between two particles	
 
     def MsD(particles,particles1):
 	vec_sep = particles.position-particles1.position
 	sqmag = math.sqrt(sum(vec_sep*vec_sep))
 	return sqmag
-  
+    """This static method ensures the Minimum Image Convention is to be obeyed. 
+    It is also ensured that no particles are used more than once in the calculation.
+    The closest particles are determined and their interaction calculated.
+    """
     @staticmethod
     def vec_sep(p1,p2,boxSize):
 	vecsep_x = p1.position[0]-p2.position[0]
@@ -78,7 +81,9 @@ The velocity of the particle is updated using this method
 	vec_sep = np.array([vecsep_x,vecsep_y,vecsep_z])
 	return vec_sep
 
-
+    """Here, the periodic boundary conditions are set. 
+    This ensures a finite number of particles are modeled and that when one particle leaves the box, it re-enters from the other side
+    """
     @staticmethod
     def PBC(particles,boxSize):
     	if particles.position[0]>=boxSize:
@@ -117,7 +122,7 @@ The velocity of the particle is updated using this method
 
 
     def __str__(self):
-        return  " postion = " + str(self.position) + "\n velocity = " + str(self.velocity) + "\n mass = " + str(self.mass)
+        return  " position = " + str(self.position) + "\n velocity = " + str(self.velocity) + "\n mass = " + str(self.mass)
     
    
     def kineticEnergy(particles):
