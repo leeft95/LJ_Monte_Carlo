@@ -15,7 +15,7 @@ class Particle3D(object):
    From the static method the attributes of the particles are assigned and initialized
 
    __str__:
-   Formated output of the particle attributes
+   Formatted output of the particle attributes
 
    kineticEnergy:
    The kinetic energy of the particle is updated
@@ -52,7 +52,7 @@ class Particle3D(object):
 	vec_sep = particles.position-particles1.position
 	sqmag = math.sqrt(sum(vec_sep*vec_sep))
 	return sqmag
-    """This static method ensures the Minimum Image Convention is to be obeyed. 
+    """This static method ensures that the Minimum Image Convention is obeyed. 
     It is also ensured that no particles are used more than once in the calculation.
     The closest particles are determined and their interaction calculated.
     """
@@ -82,7 +82,7 @@ class Particle3D(object):
 	return vec_sep
 
     """Here, the periodic boundary conditions are set. 
-    This ensures a finite number of particles are modeled and that when one particle leaves the box, it re-enters from the other side
+    This ensures a finite number of particles are modelled and that when one particle leaves the box, it re-enters from the other side
     """
     @staticmethod
     def PBC(particles,boxSize):
