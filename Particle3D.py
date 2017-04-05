@@ -41,9 +41,9 @@ class Particle3D(object):
 	
     #MSD Calculates the square of the vector separation between two particles	
 
-    def MsD(particles,particles1):
-	vec_sep = particles.position-particles1.position
-	sqmag = math.sqrt(sum(vec_sep*vec_sep))
+    def MsD(particles,particles1,boxSize):
+	vec_sep = Particle3D.vec_sep(particles,particles1,boxSize)
+	sqmag = np.dot(vec_sep,vec_sep)
 	return sqmag
     """This static method ensures the Minimum Image Convention is to be obeyed. 
     It is also ensured that no particles are used more than once in the calculation.

@@ -69,7 +69,7 @@ MDUtilities.setInitialVelocities(temp, particles)
 
 numstep = 10000
 time = 0.0
-dt = 0.001
+dt = 0.00001
 tlog = 100
 pe = 0.0
 e = 0.0
@@ -108,7 +108,7 @@ for i in range(numstep):
 
 	#to limit output file size readings will be out put only every 100 timesteps, embedded for loops to make sure that the same particle is not counted twice, and the interaction between each particle is taken into account
 
-	if i%100 == 0:
+	if i%20 == 0:
 		outfile1_0.write(str(n) + "\nPoint = " + str(point) + "\n")
 	for j in range(len(particles)):
 		for k in range(len(particles)):
@@ -129,28 +129,28 @@ for i in range(numstep):
 	    	particles[j].leapPos2nd(dt,force)
 		particles[j].position = Particle3D.PBC(particles[j],boxSize)	
 		#As the particle position is calcualted the mean square displacement is calculated and put into a array to be plotted, data calcualted every 100 timesteps		
-		if i%100 == 0:		
-			#data is written and outputted for the vmd program and is formated and outputted			
+		if i%20 == 0:		
+			#data is written and outputted for the vmd program and is formated and outputted	
+					
 	            	outfile1_0.write(str(p1) + " " + str(particles[j].position[0]) + " " + str(particles[j].position[1]) + " " + str(particles[j].position[2]) + "\n")
-	
-	if i%100 == 0:
-		bb = 0
+	for r in range(len(particles)):
+		if r != 0:
+			dist = Particle3D.vec_sep(particles[0],particles[r],boxSize)
+			vec_sepr = np.linalg.norm(dist)
+			rdf.append(vec_sepr)	
+	if i%20 == 0:
 		for aa in range(len(particles)):
-			seppy = Particle3D.MsD(particles[aa],particles1[bb])			
+			seppy = Particle3D.MsD(particles[aa],particles1[aa],boxSize)			
 			sum_seppy = seppy + seppy
-			bb = bb + 1
-		for r in range(len(particles)):
-			if r != 0:
-				dist = Particle3D.vec_sep(particles[0],particles[r],boxSize)
-				rdf.append(dist)
+		
 		
 		MsD = (1/nAt)*sum_seppy
-		tValueM.append(gg)
-		tValue.append(gg)
+		tValueM.append(gg*20)
+		tValue.append(gg*20)
 		gg = gg + 1
 		MSSD.append(MsD)
 
-	if i%100 == 0:
+	if i%20 == 0:
         	print(str((i/10000.0)*100.0)+ '%' )
 		
 		#count = copy.deepcopy(RDF(particles,n,maxr,dr,count,rho))
@@ -172,18 +172,27 @@ for i in range(numstep):
 		ke = Particle3D.kineticEnergy(particles[l])
 		total_energy = potential_new/point + ke	
 		#the data is dumped to an outputfile for all the data calucalted 
-		if l%100 == 0:		
-			outfile2_0.write(str(total_energy) + " te \n" + str(ke) +  " ke \n" + str(peo) + " pe\n" + str(MsD) + " MSD\n\n" + str(force) + " force \n\n")
+		if l%20 == 0:		
+			outfile2_0.write(str(MsD))
 		force_new = 0
 		force = 0
 		potential = 0
 		time = time + dt
 	#lists used is drawing the energy graphs is compiled every 100 timesteps
-	if i%100 == 0:		
+	if i%20 == 0:		
 		tE.append(total_energy)
 		pel.append(peo)
 		kE.append(ke)
 print boxSize
+pyplot.figure()
+pyplot.subplot(111)
+hist, bins=np.histogram(rdf, bins=100,density=True)
+bincenters = 0.5*(bins[1:]+bins[:-1])
+pyplot.plot(bincenters,hist,'-')
+pyplot.ylabel('RDF')
+pyplot.xlabel('Reduced Distance')
+pyplot.title('Radial Distribution Function (RDF)')
+pyplot.savefig('RDFR.png')
 #output and input files closed
 outfile1_0.close()
 outfile2_0.close()
@@ -203,29 +212,21 @@ pyplot.subplot(111)
 pyplot.plot(tValue,tE)
 pyplot.title('Total Energy of the particle against timestep')
 pyplot.xlabel('Timestep')
-pyplot.ylabel('Energy(J)')
+pyplot.ylabel('Reduced Units')
 pyplot.savefig('EnergyT.png')
 pyplot.figure()
 pyplot.subplot(111)
 pyplot.plot(tValue,pel)
 pyplot.title('Potential Energy of the particle against timestep')
 pyplot.xlabel('Timestep')
-pyplot.ylabel('Energy(J)')
+pyplot.ylabel('Reduced Units')
 pyplot.savefig('EnergyP.png')
 pyplot.figure()
 pyplot.subplot(111)
 pyplot.plot(tValue,kE)
 pyplot.title('Kinetic Energy of the particle against timestep')
 pyplot.xlabel('Timestep')
-pyplot.ylabel('Energy(J)')
+pyplot.ylabel('Reduced Units')
 pyplot.savefig('EnergykE.png')
-pyplot.figure()
-pyplot.subplot(111)
-hist, bins=np.histogram(rdf, bins=100,density=True)
-bincenters = 0.5*(bins[1:]+bins[:-1])
-pyplot.plot(bincenters,hist,'-')
-pyplot.ylabel('RDF')
-pyplot.xlabel('Reduced Distance')
-pyplot.title('Radial Distribution Function (RDF)')
-pyplot.savefig('RDF.png')
+
 
