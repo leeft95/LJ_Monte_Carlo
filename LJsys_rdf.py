@@ -136,7 +136,7 @@ for i in range(numstep):
 	for r in range(len(particles)):
 		if r != 0:
 			dist = Particle3D.vec_sep(particles[0],particles[r],boxSize)
-			vec_sepr = np.linalg.norm(vec_sep)
+			vec_sepr = np.linalg.norm(dist)
 			rdf.append(vec_sepr)	
 	if i%20 == 0:
 		for aa in range(len(particles)):
@@ -146,13 +146,13 @@ for i in range(numstep):
 		
 		
 		MsD = (1/nAt)*sum_seppy
-		tValueM.append(gg)
-		tValue.append(gg)
+		tValueM.append(gg*20)
+		tValue.append(gg*20)
 		gg = gg + 1
 		MSSD.append(MsD)
 
-	if i%20 == 0:
-        	print(str((i/10000.0)*20.0)+ '%' )
+	if i%100 == 0:
+        	print(str((i/10000.0)*100.0)+ '%' )
 		
 		#count = copy.deepcopy(RDF(particles,n,maxr,dr,count,rho))
 		#print count
@@ -173,14 +173,14 @@ for i in range(numstep):
 		ke = Particle3D.kineticEnergy(particles[l])
 		total_energy = potential_new/point + ke	
 		#the data is dumped to an outputfile for all the data calucalted 
-		if l%100 == 0:		
+		if i%20 == 0:		
 			outfile2_0.write(str(total_energy) + " te \n" + str(ke) +  " ke \n" + str(peo) + " pe\n" + str(MsD) + " MSD\n\n" + str(force) + " force \n\n")
 		force_new = 0
 		force = 0
 		potential = 0
 		time = time + dt
 	#lists used is drawing the energy graphs is compiled every 100 timesteps
-	if i%100 == 0:		
+	if i%20 == 0:		
 		tE.append(total_energy)
 		pel.append(peo)
 		kE.append(ke)
